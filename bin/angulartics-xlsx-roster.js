@@ -20,13 +20,15 @@ var analyticsI 	= [
 var dir         = path.resolve(process.cwd());
 var dest        = argv.dest ? path.resolve(argv.dest) : dir;
 var filename    = argv.filename || "analytics";
+var ignore      = argv.ignore ? argv.ignore.split(",") : [];
 var orderBy     = argv.orderBy ? analyticsI.indexOf(argv.orderBy) : 1;
 
 // Read current directory recursively.
-recursive(dir, function(err, files) {
+recursive(dir, ignore, function(err, files) {
 
     if (files) {
         var workbook = [];
+        var currentFile;
 
         // Set HTML parser.
         var parser = new htmlparser.Parser({
@@ -39,12 +41,13 @@ recursive(dir, function(err, files) {
                     attrs[analyticsI[2]] || 
                     attrs[analyticsI[3]]) {
                     
-                    // Push normalized analytics into workbook if there's any angulartics attribute.
+                    // Push normalized analytics and current file into workbook if there's any angulartics attribute.
                     workbook.push([
-                        attrs[analyticsI[0]] ? attrs[analyticsI[0]].replace(/[{{}}]/g, "") : "", 
-                        attrs[analyticsI[1]] ? attrs[analyticsI[1]].replace(/[{{}}]/g, "") : "", 
-                        attrs[analyticsI[2]] ? attrs[analyticsI[2]].replace(/[{{}}]/g, "") : "", 
-                        attrs[analyticsI[3]] ? attrs[analyticsI[3]].replace(/[{{}}]/g, "") : ""
+                        attrs[analyticsI[0]] ? attrs[analyticsI[0]].replace(/[{{}}]/g, "").trim() : "", 
+                        attrs[analyticsI[1]] ? attrs[analyticsI[1]].replace(/[{{}}]/g, "").trim() : "", 
+                        attrs[analyticsI[2]] ? attrs[analyticsI[2]].replace(/[{{}}]/g, "").trim() : "", 
+                        attrs[analyticsI[3]] ? attrs[analyticsI[3]].replace(/[{{}}]/g, "").trim() : "",
+                        currentFile
                     ]);
                 }
             },
@@ -62,11 +65,11 @@ recursive(dir, function(err, files) {
                 });
 
                 // Set workbook headers.
-                workbook.unshift(analyticsI.map(function(head){
-                    return head.toUpperCase();
-                }));
+                workbook.unshift(analyticsI.map(function(header){
+                    return header.toUpperCase();
+                }).concat("FILE"));
 				
-                // Write xlsx file.
+                // Write XLSX file.
                 fs.writeFile(dest + "/" + filename + ".xlsx", xlsx.build([{
                     data: workbook
                 }]), "utf8");
@@ -76,6 +79,7 @@ recursive(dir, function(err, files) {
         // Parse HTML files.
         files.forEach(function(file) {
             if (path.extname(file) === ".html") {
+                currentFile = dir.split(path.sep).pop() + file.replace(dir, "");
                 parser.write(fs.readFileSync(path.resolve(file), "utf8"));
             }
         });
@@ -83,7 +87,6 @@ recursive(dir, function(err, files) {
         // Parse the end of the buffer.
         parser.end();
 
-        // Program feedback
         if (!workbook.length) {
             console.warn("No angulartics attributes found.");
         } else {
