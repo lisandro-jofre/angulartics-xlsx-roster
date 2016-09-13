@@ -31,7 +31,7 @@ The name of the generated XLSX file.
 
 ### --ignore
 
-The directories, files or patterns to ignore separated by commas.
+The directories, files or patterns to ignore separated by commas (no spaces).
 
 ### --orderBy
 
