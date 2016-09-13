@@ -8,7 +8,11 @@ A CLI tool that recursively searches the current working directory for angularti
 
 ## Usage
 
-Open a terminal, go to the project's directory that you want to generate the roster for and run ```angulartics-xlsx-roster```. An XLSX file with the angulartics roster will be generated in the current directory.
+-  Open a terminal. 
+-  Go to the project directory that you want to generate the roster for.
+-  Run ```angulartics-xlsx-roster```. 
+
+An XLSX file with the angulartics roster will be generated.
 
 ## Options
 
