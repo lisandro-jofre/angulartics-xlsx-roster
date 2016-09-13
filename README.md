@@ -1,3 +1,6 @@
+[![npm version](https://badge.fury.io/js/angulartics-xlsx-roster.svg)](https://badge.fury.io/js/angulartics-xlsx-roster)
+[![dependencies Status](https://david-dm.org/lisandro-jofre/angulartics-xlsx-roster/status.svg)](https://david-dm.org/lisandro-jofre/angulartics-xlsx-roster)
+
 # angulartics-xlsx-roster
 
 A CLI tool that recursively searches the current working directory for angulartics attributes in HTML files and generates an XLSX roster.
