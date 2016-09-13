@@ -1,0 +1,35 @@
+{
+    "name": "angulartics-xlsx-roster",
+    "version": "1.0.0",
+    "description": "A CLI tool that recursively searches the current working directory for angulartics attributes in HTML files and generates an XLSX roster.",
+    "keywords": [
+        "angulartics",
+        "analytics",
+        "xlsx",
+        "excel",
+        "roster"
+    ],
+    "homepage": "https://github.com/lisandro-jofre/angulartics-xlsx-roster",
+    "bugs": {
+        "url": "https://github.com/lisandro-jofre/angulartics-xlsx-roster/issues"
+    },
+    "license": "MIT",
+    "author": {
+        "email": "lisandrojofre@gmail.com",
+        "name": "Lisandro Jofré"
+    },
+    "bin": {
+        "angulartics-xlsx-roster": "./bin/angulartics-xlsx-roster.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lisandro-jofre/angulartics-xlsx-roster"
+    },
+    "dependencies": {
+        "htmlparser2": "^3.9.1",
+        "node-xlsx": "^0.7.2",
+        "recursive-readdir": "^2.0.0",
+        "yargs": "^5.0.0"
+    },
+    "preferGlobal": true
+}
