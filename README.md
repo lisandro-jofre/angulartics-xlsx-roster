@@ -29,6 +29,10 @@ The directory where the angulartics roster will be generated.
 *Default: analytics.xlsx*</br>
 The name of the generated XLSX file.
 
+### --ignore
+
+The directories, files or patterns to ignore separated by commas.
+
 ### --orderBy
 
 *Default: analytics-category*</br>
