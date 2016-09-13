@@ -12,7 +12,7 @@ var xlsx        = require("node-xlsx");
 var analyticsI 	= [
     "analytics-on",
     "analytics-category",
-    "analyitcs-event",
+    "analytics-event",
     "analytics-label"
 ];
 
@@ -39,12 +39,12 @@ recursive(dir, function(err, files) {
                     attrs[analyticsI[2]] || 
                     attrs[analyticsI[3]]) {
                     
-                    // Push analytics into workbook if there's any angulartics attribute.
+                    // Push normalized analytics into workbook if there's any angulartics attribute.
                     workbook.push([
-                        attrs[analyticsI[0]], 
-                        attrs[analyticsI[1]], 
-                        attrs[analyticsI[2]], 
-                        attrs[analyticsI[3]]
+                        attrs[analyticsI[0]] ? attrs[analyticsI[0]].replace(/[{{}}]/g, "") : "", 
+                        attrs[analyticsI[1]] ? attrs[analyticsI[1]].replace(/[{{}}]/g, "") : "", 
+                        attrs[analyticsI[2]] ? attrs[analyticsI[2]].replace(/[{{}}]/g, "") : "", 
+                        attrs[analyticsI[3]] ? attrs[analyticsI[3]].replace(/[{{}}]/g, "") : ""
                     ]);
                 }
             },
@@ -52,15 +52,19 @@ recursive(dir, function(err, files) {
             // Parser for the end of the buffer.
             onend: function() {
 
+                if (!workbook.length) return;
+
                 // Sort workbook.
                 workbook.sort(function(a, b) {
                     if (a[orderBy] < b[orderBy]) return -1;
                     if (a[orderBy] > b[orderBy]) return 1;
                     return 0;
-                });
+                })
 
-                // Set workbook header.
-                workbook.unshift(analyticsI);
+                // Set workbook headers.
+                workbook.unshift(analyticsI.map(function(head){
+                    return head.toUpperCase();
+                }));
 				
                 // Write xlsx file.
                 fs.writeFile(dest + "/" + filename + ".xlsx", xlsx.build([{
@@ -78,5 +82,12 @@ recursive(dir, function(err, files) {
 		
         // Parse the end of the buffer.
         parser.end();
+
+        // Program feedback
+        if (!workbook.length) {
+            console.warn("No angulartics attributes found.");
+        } else {
+            console.log("Angulartics XLSX roster generated successfully.");
+        }
     }
 });
