@@ -59,7 +59,7 @@ recursive(dir, function(err, files) {
                     if (a[orderBy] < b[orderBy]) return -1;
                     if (a[orderBy] > b[orderBy]) return 1;
                     return 0;
-                })
+                });
 
                 // Set workbook headers.
                 workbook.unshift(analyticsI.map(function(head){
