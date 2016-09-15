@@ -9,7 +9,7 @@ var recursive   = require("recursive-readdir");
 var xlsx        = require("node-xlsx");
 
 // Interface.
-var aXLSXrI 	= [
+var aXLSXrI = [
     "analytics-on",
     "analytics-category",
     "analytics-event",
