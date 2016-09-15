@@ -35,9 +35,9 @@ The directories, files or patterns to ignore separated by commas (no spaces).
 
 ### --orderBy
 
-*Default: analytics-category*</br>
+*Default: file.*</br>
 The order of the angulartics roster.</br>
-Possible values: analytics-on, analytics-category, analytics-event and analytics-label.
+Possible values: analytics-on, analytics-category, analytics-event, analytics-label and file.
 
 ## License
 
