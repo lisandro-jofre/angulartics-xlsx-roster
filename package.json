@@ -1,6 +1,6 @@
 {
     "name": "angulartics-xlsx-roster",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "description": "A CLI tool that recursively searches the current working directory for angulartics attributes in HTML files and generates an XLSX roster.",
     "keywords": [
         "angulartics",
