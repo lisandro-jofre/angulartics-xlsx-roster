@@ -9,19 +9,32 @@ var recursive   = require("recursive-readdir");
 var xlsx        = require("node-xlsx");
 
 // Interface.
-var analyticsI 	= [
+var aXLSXrI 	= [
     "analytics-on",
     "analytics-category",
     "analytics-event",
-    "analytics-label"
+    "analytics-label",
+    "file"
 ];
 
-// Locals.
+// Locals & defaults.
 var dir         = path.resolve(process.cwd());
-var dest        = argv.dest ? path.resolve(argv.dest) : dir;
-var filename    = argv.filename || "analytics";
-var ignore      = argv.ignore ? argv.ignore.split(",") : [];
-var orderBy     = argv.orderBy ? analyticsI.indexOf(argv.orderBy) : 1;
+var dest        = argv.dest && argv.dest.length ? path.resolve(argv.dest) : dir;
+var filename    = argv.filename && argv.filename.length ? argv.filename : "analytics";
+var ignore      = argv.ignore && argv.ignore.length ? argv.ignore.split(",") : [];
+var orderBy     = argv.orderBy && argv.orderBy.length ? aXLSXrI.indexOf(argv.orderBy) : 4;
+
+// Throw error if --dest option is not an existing directory.
+if (!fs.existsSync(dest)) {
+    console.error("Sorry, the specified --dest option is not an existing directory.");
+    return;
+}
+
+// Throw error if --orderBy option is not a valid value.
+if (orderBy === -1) {
+    console.error("Sorry, the specified --orderBy option is not a valid value.");
+    return;
+}
 
 // Read current directory recursively.
 recursive(dir, ignore, function(err, files) {
@@ -36,17 +49,17 @@ recursive(dir, ignore, function(err, files) {
             // Parser for each file.
             onopentag: function(tag, attrs) {
 				
-                if (attrs[analyticsI[0]] || 
-                    attrs[analyticsI[1]] ||
-                    attrs[analyticsI[2]] || 
-                    attrs[analyticsI[3]]) {
+                if (attrs[aXLSXrI[0]] || 
+                    attrs[aXLSXrI[1]] ||
+                    attrs[aXLSXrI[2]] || 
+                    attrs[aXLSXrI[3]]) {
                     
                     // Push normalized analytics and current file into workbook if there's any angulartics attribute.
                     workbook.push([
-                        attrs[analyticsI[0]] ? attrs[analyticsI[0]].replace(/[{{}}]/g, "").trim() : "", 
-                        attrs[analyticsI[1]] ? attrs[analyticsI[1]].replace(/[{{}}]/g, "").trim() : "", 
-                        attrs[analyticsI[2]] ? attrs[analyticsI[2]].replace(/[{{}}]/g, "").trim() : "", 
-                        attrs[analyticsI[3]] ? attrs[analyticsI[3]].replace(/[{{}}]/g, "").trim() : "",
+                        attrs[aXLSXrI[0]] ? attrs[aXLSXrI[0]].replace(/[{{}}]/g, "").trim() : "", 
+                        attrs[aXLSXrI[1]] ? attrs[aXLSXrI[1]].replace(/[{{}}]/g, "").trim() : "", 
+                        attrs[aXLSXrI[2]] ? attrs[aXLSXrI[2]].replace(/[{{}}]/g, "").trim() : "", 
+                        attrs[aXLSXrI[3]] ? attrs[aXLSXrI[3]].replace(/[{{}}]/g, "").trim() : "",
                         currentFile
                     ]);
                 }
@@ -65,9 +78,9 @@ recursive(dir, ignore, function(err, files) {
                 });
 
                 // Set workbook headers.
-                workbook.unshift(analyticsI.map(function(header){
+                workbook.unshift(aXLSXrI.map(function(header) {
                     return header.toUpperCase();
-                }).concat("FILE"));
+                }));
 				
                 // Write XLSX file.
                 fs.writeFile(dest + "/" + filename + ".xlsx", xlsx.build([{
